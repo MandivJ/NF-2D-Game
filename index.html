@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON FURY — Cyberpunk Arena Fighter v2.0</title>
+    <meta name="description" content="A futuristic 2D cyberpunk fighting game with cheat codes, skill trees, and smart alien AI. Battle waves of alien creatures in this action-packed arena fighter.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: { blue:'#00f0ff', purple:'#b829ff', green:'#39ff14', pink:'#ff2d95', orange:'#ff6b2b', yellow:'#ffe600' },
+                        cyber: { dark:'#0a0a1a', darker:'#050510', panel:'#111133', border:'#1a1a4e' }
+                    },
+                    fontFamily: { cyber:['"Orbitron"','sans-serif'], mono:['"Share Tech Mono"','monospace'] }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Game Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-cyber-darker overflow-hidden select-none">
+
+    <!-- CINEMATIC INTRO SCREEN -->
+    <div id="intro-screen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div id="intro-content" class="text-center intro-fade-in">
+            <div class="intro-glitch" data-text="NEON FURY">NEON FURY</div>
+            <p class="font-mono text-neon-blue text-sm mt-4 tracking-[0.5em] intro-subtitle">CYBERPUNK ARENA FIGHTER</p>
+            <div class="mt-8">
+                <div class="w-64 h-1 bg-cyber-panel mx-auto rounded-full overflow-hidden">
+                    <div id="intro-progress" class="h-full bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink rounded-full transition-all duration-100" style="width: 0%"></div>
+                </div>
+                <p class="font-mono text-gray-500 text-xs mt-2" id="intro-status">INITIALIZING SYSTEMS...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- START MENU SCREEN -->
+    <div id="start-menu" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-cyber-darker">
+            <canvas id="menu-bg-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full">
+            <div class="mb-12 text-center">
+                <h1 class="font-cyber text-6xl md:text-8xl font-black tracking-wider neon-text-blue title-glow">NEON FURY</h1>
+                <p class="font-mono text-neon-purple text-lg mt-2 tracking-[0.3em]">ALIEN PLANET ARENA</p>
+                <p class="font-mono text-gray-500 text-xs mt-1">v2.0 — ENHANCED EDITION</p>
+            </div>
+            <div class="flex flex-col gap-4 w-72">
+                <button id="btn-start" class="cyber-btn cyber-btn-primary font-cyber text-lg tracking-widest">
+                    <span class="cyber-btn-content">START GAME</span>
+                </button>
+                <button id="btn-controls" class="cyber-btn cyber-btn-secondary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">CONTROLS</span>
+                </button>
+            </div>
+            <!-- Controls Info -->
+            <div id="controls-panel" class="mt-8 hidden">
+                <div class="bg-cyber-panel/80 backdrop-blur-md border border-cyber-border rounded-lg p-6 max-w-lg">
+                    <h3 class="font-cyber text-neon-blue text-center mb-4">CONTROLS</h3>
+                    <div class="grid grid-cols-2 gap-4 font-mono text-sm">
+                        <div class="space-y-2">
+                            <p class="text-neon-green">Movement</p>
+                            <p class="text-gray-400"><span class="key-badge">W/↑</span> Up</p>
+                            <p class="text-gray-400"><span class="key-badge">A/←</span> Left</p>
+                            <p class="text-gray-400"><span class="key-badge">S/↓</span> Down</p>
+                            <p class="text-gray-400"><span class="key-badge">D/→</span> Right</p>
+                            <p class="text-gray-400"><span class="key-badge">SPACE</span> Jump</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-neon-pink">Combat</p>
+                            <p class="text-gray-400"><span class="key-badge">J</span> Punch</p>
+                            <p class="text-gray-400"><span class="key-badge">K</span> Kick</p>
+                            <p class="text-gray-400"><span class="key-badge">L</span> Energy Blast</p>
+                            <p class="text-gray-400"><span class="key-badge">E</span> Teleport</p>
+                            <p class="text-gray-400"><span class="key-badge">Q</span> Time Freeze</p>
+                        </div>
+                        <div class="space-y-2 col-span-2">
+                            <p class="text-neon-purple">System</p>
+                            <p class="text-gray-400"><span class="key-badge">U</span> Upgrades <span class="key-badge">~</span> Dev Console <span class="key-badge">ESC</span> Pause</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-8 font-mono text-gray-600 text-xs tracking-widest">
+                v2.0 — BUILT WITH HTML • TAILWIND CSS • JS MODULES
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME HUD -->
+    <div id="game-hud" class="fixed inset-0 z-30 pointer-events-none hidden">
+        <!-- Top Bar -->
+        <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-start">
+            <!-- Player Health -->
+            <div class="pointer-events-auto">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-cyber-panel border border-neon-blue/50 flex items-center justify-center">
+                        <span class="text-xl">⚡</span>
+                    </div>
+                    <div>
+                        <p class="font-cyber text-neon-blue text-xs tracking-widest">PLAYER</p>
+                        <div class="w-48 h-4 bg-cyber-panel rounded-full overflow-hidden border border-cyber-border mt-1">
+                            <div id="player-health-bar" class="h-full bg-gradient-to-r from-neon-green to-emerald-400 rounded-full transition-all duration-300 health-bar-glow"></div>
+                        </div>
+                        <p class="font-mono text-gray-500 text-[10px] mt-0.5"><span id="player-hp-text">100</span> / 100 HP</p>
+                    </div>
+                </div>
+                <div id="shield-indicator" class="hidden mt-2 ml-13">
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm">🛡️</span>
+                        <div class="w-24 h-2 bg-cyber-panel rounded-full overflow-hidden border border-neon-blue/30">
+                            <div id="shield-bar" class="h-full bg-gradient-to-r from-neon-blue to-cyan-300 rounded-full transition-all duration-100"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="speed-indicator" class="hidden mt-1 ml-13">
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm">💨</span>
+                        <p class="font-mono text-neon-yellow text-[10px]">SPEED BOOST ACTIVE</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Wave -->
+            <div class="text-center">
+                <div class="bg-cyber-panel/60 backdrop-blur-sm border border-cyber-border rounded-lg px-6 py-2">
+                    <p class="font-cyber text-neon-purple text-xs tracking-widest">WAVE</p>
+                    <p id="wave-number" class="font-cyber text-neon-blue text-2xl font-bold">1</p>
+                </div>
+            </div>
+            <!-- Score & Pause -->
+            <div class="pointer-events-auto text-right">
+                <div class="flex items-center gap-3">
+                    <div>
+                        <p class="font-cyber text-neon-yellow text-xs tracking-widest">SCORE</p>
+                        <p id="score-display" class="font-cyber text-white text-2xl font-bold">0</p>
+                    </div>
+                    <button id="btn-pause" class="w-10 h-10 rounded-lg bg-cyber-panel border border-cyber-border hover:border-neon-purple transition-colors flex items-center justify-center">
+                        <span class="text-gray-400 text-lg">⏸</span>
+                    </button>
+                </div>
+                <div class="mt-2">
+                    <p class="font-mono text-gray-500 text-[10px]">COMBO: <span id="combo-counter" class="text-neon-pink">0</span></p>
+                    <p class="font-mono text-gray-500 text-[10px]">ENEMIES: <span id="enemy-counter" class="text-neon-orange">0</span></p>
+                </div>
+            </div>
+        </div>
+        <!-- Wave Announcement -->
+        <div id="wave-announcement" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+            <div class="text-center wave-announce-anim">
+                <p class="font-cyber text-neon-purple text-lg tracking-[0.5em]">INCOMING</p>
+                <p id="wave-announce-text" class="font-cyber text-6xl font-black neon-text-blue mt-2">WAVE 1</p>
+                <p id="wave-announce-sub" class="font-mono text-neon-green text-sm mt-2"></p>
+            </div>
+        </div>
+        <!-- Boss Warning -->
+        <div id="boss-warning" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+            <div class="text-center boss-warn-anim">
+                <p class="font-cyber text-neon-orange text-xl tracking-[0.3em] animate-pulse">⚠ WARNING ⚠</p>
+                <p class="font-cyber text-5xl font-black neon-text-pink mt-2">BOSS INCOMING</p>
+            </div>
+        </div>
+        <!-- Combo Display -->
+        <div id="combo-display" class="absolute left-1/2 top-1/3 -translate-x-1/2 pointer-events-none hidden">
+            <p id="combo-text" class="font-cyber text-4xl font-black neon-text-pink combo-pop"></p>
+        </div>
+    </div>
+
+    <!-- PAUSE MENU -->
+    <div id="pause-menu" class="fixed inset-0 z-40 hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full">
+            <h2 class="font-cyber text-5xl font-black neon-text-purple mb-8">PAUSED</h2>
+            <div class="flex flex-col gap-3 w-64">
+                <button id="btn-resume" class="cyber-btn cyber-btn-primary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">RESUME</span>
+                </button>
+                <button id="btn-restart-pause" class="cyber-btn cyber-btn-secondary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">RESTART</span>
+                </button>
+                <button id="btn-quit" class="cyber-btn cyber-btn-secondary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">QUIT TO MENU</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div id="gameover-screen" class="fixed inset-0 z-40 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full gameover-anim">
+            <h2 class="font-cyber text-6xl font-black neon-text-pink mb-4">DEFEATED</h2>
+            <div class="bg-cyber-panel/60 border border-cyber-border rounded-lg p-6 mb-8 min-w-[300px]">
+                <div class="space-y-3 font-mono text-sm">
+                    <div class="flex justify-between"><span class="text-gray-400">FINAL SCORE</span><span id="final-score" class="text-neon-yellow font-bold">0</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">HIGH SCORE</span><span id="high-score-display" class="text-neon-blue font-bold">0</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">WAVE REACHED</span><span id="final-wave" class="text-neon-blue font-bold">1</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">ENEMIES DEFEATED</span><span id="final-kills" class="text-neon-green font-bold">0</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">MAX COMBO</span><span id="final-combo" class="text-neon-pink font-bold">0</span></div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3 w-64">
+                <button id="btn-retry" class="cyber-btn cyber-btn-primary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">RETRY</span>
+                </button>
+                <button id="btn-menu" class="cyber-btn cyber-btn-secondary font-cyber text-sm tracking-widest">
+                    <span class="cyber-btn-content">MAIN MENU</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEVELOPER CONSOLE (Floating overlay) -->
+    <div id="dev-console" class="fixed z-[60] dev-console-wrapper">
+        <div class="dev-console-panel bg-black/85 backdrop-blur-lg border border-neon-green/30 rounded-lg overflow-hidden">
+            <div class="dev-console-header flex items-center justify-between px-3 py-1.5 border-b border-neon-green/20">
+                <div class="flex items-center gap-2">
+                    <span class="font-mono text-neon-green text-xs">NEON_FURY://</span>
+                    <span class="font-mono text-gray-500 text-xs">DEV CONSOLE</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button id="console-minimize" class="font-mono text-gray-500 hover:text-neon-green text-xs px-1.5 py-0.5 transition-colors rounded hover:bg-neon-green/10" title="Minimize">─</button>
+                    <button id="console-close" class="font-mono text-gray-500 hover:text-neon-pink text-xs px-1.5 py-0.5 transition-colors rounded hover:bg-neon-pink/10" title="Close">✕</button>
+                </div>
+            </div>
+            <div id="dev-console-body" class="console-body">
+                <div id="dev-output" class="font-mono text-xs text-gray-400 overflow-y-auto px-3 pt-2 dev-console-output" style="max-height:120px"></div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                    <span class="font-mono text-neon-green text-sm">></span>
+                    <input id="dev-input" type="text" class="flex-1 bg-transparent border-none outline-none font-mono text-neon-green text-sm caret-neon-green" placeholder="Type 'help' for commands..." autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SKILL TREE PANEL -->
+    <div id="skill-panel" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[55] hidden">
+        <div class="bg-cyber-darker/95 backdrop-blur-md border border-neon-purple/50 rounded-lg p-4 w-72 skill-panel-glow">
+            <div class="scan-line-overlay"></div>
+            <div class="skill-content"></div>
+            <p class="font-mono text-gray-600 text-[10px] text-center mt-2">Press U to close</p>
+        </div>
+    </div>
+
+    <!-- FPS COUNTER -->
+    <div id="fps-counter" class="fixed top-2 left-1/2 -translate-x-1/2 z-[45] font-mono text-neon-green text-xs bg-black/50 px-2 py-0.5 rounded hidden"></div>
+
+    <!-- GAME CANVAS -->
+    <canvas id="game-canvas" class="block w-full h-full"></canvas>
+
+    <!-- MOBILE CONTROLS -->
+    <div id="mobile-controls" class="fixed bottom-0 left-0 right-0 z-[35] hidden md:hidden pointer-events-auto p-4">
+        <div class="flex justify-between items-end">
+            <div class="relative w-36 h-36">
+                <button data-dir="up" class="mobile-btn absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12">▲</button>
+                <button data-dir="left" class="mobile-btn absolute top-1/2 left-0 -translate-y-1/2 w-12 h-12">◄</button>
+                <button data-dir="right" class="mobile-btn absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12">►</button>
+                <button data-dir="down" class="mobile-btn absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-12">▼</button>
+            </div>
+            <div class="flex gap-2 items-end">
+                <button data-action="jump" class="mobile-btn-action w-14 h-14 bg-neon-blue/20 border-neon-blue">⬆</button>
+                <div class="flex flex-col gap-2">
+                    <button data-action="punch" class="mobile-btn-action w-12 h-12 bg-neon-green/20 border-neon-green">👊</button>
+                    <button data-action="kick" class="mobile-btn-action w-12 h-12 bg-neon-orange/20 border-neon-orange">🦵</button>
+                </div>
+                <button data-action="blast" class="mobile-btn-action w-14 h-14 bg-neon-purple/20 border-neon-purple">💥</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Script (ES6 Module) -->
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>

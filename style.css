@@ -1,0 +1,198 @@
+/* ============================================
+   NEON FURY v2.0 — Cyberpunk Fighting Game Styles
+   ============================================ */
+
+:root {
+    --neon-blue: #00f0ff;
+    --neon-purple: #b829ff;
+    --neon-green: #39ff14;
+    --neon-pink: #ff2d95;
+    --neon-orange: #ff6b2b;
+    --neon-yellow: #ffe600;
+    --cyber-dark: #0a0a1a;
+    --cyber-darker: #050510;
+    --cyber-panel: #111133;
+    --cyber-border: #1a1a4e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--cyber-darker); font-family: 'Share Tech Mono', monospace; }
+#game-canvas { display: block; width: 100vw; height: 100vh; image-rendering: pixelated; }
+
+/* ---- NEON TEXT ---- */
+.neon-text-blue { color: var(--neon-blue); text-shadow: 0 0 7px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 21px var(--neon-blue), 0 0 42px #0077ff, 0 0 82px #0077ff; }
+.neon-text-purple { color: var(--neon-purple); text-shadow: 0 0 7px var(--neon-purple), 0 0 10px var(--neon-purple), 0 0 21px var(--neon-purple), 0 0 42px #7700ff; }
+.neon-text-pink { color: var(--neon-pink); text-shadow: 0 0 7px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 21px var(--neon-pink), 0 0 42px #ff0055; }
+.neon-text-green { color: var(--neon-green); text-shadow: 0 0 7px var(--neon-green), 0 0 10px var(--neon-green), 0 0 21px var(--neon-green); }
+
+/* ---- TITLE GLOW ---- */
+.title-glow { animation: titlePulse 3s ease-in-out infinite; }
+@keyframes titlePulse {
+    0%, 100% { text-shadow: 0 0 7px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 21px var(--neon-blue), 0 0 42px #0077ff, 0 0 82px #0077ff; }
+    50% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue), 0 0 80px #0077ff, 0 0 120px #0077ff; }
+}
+
+/* ---- HEALTH BAR ---- */
+.health-bar-glow { box-shadow: 0 0 8px var(--neon-green), inset 0 0 4px rgba(57,255,20,0.3); }
+
+/* ---- CYBER BUTTONS ---- */
+.cyber-btn { position: relative; padding: 14px 28px; border: none; cursor: pointer; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); transition: all 0.2s ease; overflow: hidden; }
+.cyber-btn::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s ease; }
+.cyber-btn:hover::before { opacity: 1; }
+.cyber-btn:active { transform: scale(0.96); }
+.cyber-btn-primary { background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); color: white; }
+.cyber-btn-primary::before { background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)); }
+.cyber-btn-primary:hover { box-shadow: 0 0 20px var(--neon-blue), 0 0 40px rgba(0,240,255,0.3); }
+.cyber-btn-secondary { background: var(--cyber-panel); color: var(--neon-blue); border: 1px solid var(--cyber-border); }
+.cyber-btn-secondary:hover { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0,240,255,0.2); }
+.cyber-btn-content { position: relative; z-index: 2; }
+
+/* ---- KEY BADGES ---- */
+.key-badge { display: inline-block; padding: 2px 8px; background: var(--cyber-panel); border: 1px solid var(--cyber-border); border-radius: 4px; font-size: 11px; color: var(--neon-blue); min-width: 28px; text-align: center; margin-right: 4px; }
+
+/* ---- INTRO ANIMATIONS ---- */
+.intro-fade-in { animation: introFadeIn 1s ease-out forwards; }
+@keyframes introFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.intro-glitch { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: white; position: relative; animation: glitch 2.5s infinite; }
+.intro-glitch::before, .intro-glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.intro-glitch::before { color: var(--neon-blue); animation: glitchBefore 3s infinite; clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); }
+.intro-glitch::after { color: var(--neon-pink); animation: glitchAfter 2s infinite; clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%); }
+@keyframes glitch { 0%,90%,100%{transform:translate(0)} 92%{transform:translate(-3px,2px)} 94%{transform:translate(3px,-2px)} 96%{transform:translate(-2px,-1px)} 98%{transform:translate(2px,1px)} }
+@keyframes glitchBefore { 0%,85%,100%{transform:translate(0)} 87%{transform:translate(-4px,0)} 89%{transform:translate(4px,0)} 91%{transform:translate(-2px,0)} }
+@keyframes glitchAfter { 0%,88%,100%{transform:translate(0)} 90%{transform:translate(3px,0)} 92%{transform:translate(-3px,0)} }
+.intro-subtitle { animation: subtitleFlicker 4s ease-in-out infinite; }
+@keyframes subtitleFlicker { 0%,100%{opacity:1} 50%{opacity:0.7} 52%{opacity:1} 54%{opacity:0.5} 56%{opacity:1} }
+
+/* ---- WAVE ANNOUNCEMENT ---- */
+.wave-announce-anim { animation: waveAnnounce 2.5s ease-out forwards; }
+@keyframes waveAnnounce { 0%{opacity:0;transform:scale(2)} 15%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(0.8) translateY(-30px)} }
+
+/* ---- BOSS WARNING ---- */
+.boss-warn-anim { animation: bossWarn 3s ease-out forwards; }
+@keyframes bossWarn { 0%{opacity:0} 5%{opacity:1} 10%{opacity:0.3} 15%{opacity:1} 20%{opacity:0.5} 25%{opacity:1} 75%{opacity:1} 100%{opacity:0} }
+
+/* ---- COMBO POP ---- */
+.combo-pop { animation: comboPop 0.6s ease-out forwards; }
+@keyframes comboPop { 0%{opacity:0;transform:scale(0.3) translateY(20px)} 40%{opacity:1;transform:scale(1.2) translateY(-10px)} 100%{opacity:0;transform:scale(1) translateY(-40px)} }
+
+/* ---- GAME OVER ---- */
+.gameover-anim { animation: gameoverSlide 0.8s ease-out forwards; }
+@keyframes gameoverSlide { 0%{opacity:0;transform:translateY(50px)} 100%{opacity:1;transform:translateY(0)} }
+
+/* ---- SCREEN SHAKE ---- */
+.screen-shake { animation: screenShake 0.3s ease-out; }
+@keyframes screenShake { 0%,100%{transform:translate(0)} 10%{transform:translate(-8px,4px)} 20%{transform:translate(6px,-6px)} 30%{transform:translate(-4px,2px)} 40%{transform:translate(4px,-4px)} 50%{transform:translate(-2px,4px)} }
+
+/* ---- HUD GLITCH on damage ---- */
+.hud-glitch { animation: hudGlitch 0.3s ease-out; }
+@keyframes hudGlitch {
+    0%,100% { filter: none; }
+    20% { filter: hue-rotate(90deg) brightness(1.5); transform: translate(-2px, 1px); }
+    40% { filter: hue-rotate(-60deg) brightness(0.8); transform: translate(2px, -1px); }
+    60% { filter: hue-rotate(45deg) saturate(2); transform: translate(-1px, -1px); }
+    80% { filter: hue-rotate(-30deg); transform: translate(1px, 1px); }
+}
+
+/* ---- DEVELOPER CONSOLE (Floating overlay) ---- */
+.dev-console-wrapper {
+    bottom: 12px;
+    right: 12px;
+    width: 380px;
+    max-width: calc(100vw - 24px);
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.dev-console-wrapper.console-open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+.dev-console-panel {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 15px rgba(57,255,20,0.1);
+}
+.dev-console-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.02) 2px, rgba(0,240,255,0.02) 4px);
+    pointer-events: none;
+    z-index: 1;
+}
+.dev-console-header {
+    background: rgba(0,20,0,0.4);
+    position: relative;
+    z-index: 2;
+}
+.console-body {
+    max-height: 180px;
+    transition: max-height 0.25s ease, opacity 0.2s ease;
+    overflow: hidden;
+}
+.dev-console-wrapper.console-minimized .console-body {
+    max-height: 0;
+    opacity: 0;
+}
+.dev-console-output {
+    scrollbar-width: thin;
+    scrollbar-color: var(--neon-green) transparent;
+}
+.dev-console-output::-webkit-scrollbar { width: 4px; }
+.dev-console-output::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 2px; }
+
+/* ---- SKILL TREE PANEL ---- */
+.skill-panel-glow {
+    box-shadow: 0 0 30px rgba(184,41,255,0.2), inset 0 0 30px rgba(184,41,255,0.05);
+}
+.scan-line-overlay {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.015) 2px, rgba(0,240,255,0.015) 4px);
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+.skill-row {
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+.skill-row:hover {
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 10px rgba(184,41,255,0.15);
+}
+.skill-buy-btn {
+    transition: all 0.15s ease;
+}
+.skill-buy-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(184,41,255,0.3);
+}
+.skill-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---- MOBILE CONTROLS ---- */
+.mobile-btn { background: rgba(17,17,51,0.7); border: 1px solid var(--neon-blue); border-radius: 8px; color: var(--neon-blue); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.mobile-btn:active { background: rgba(0,240,255,0.3); box-shadow: 0 0 12px var(--neon-blue); }
+.mobile-btn-action { border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.mobile-btn-action:active { transform: scale(0.9); filter: brightness(1.5); }
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cyber-darker); }
+::-webkit-scrollbar-thumb { background: var(--cyber-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+    .intro-glitch { font-size: 2.5rem; }
+    #mobile-controls { display: flex !important; }
+}
+@media (max-width: 480px) {
+    .intro-glitch { font-size: 1.8rem; }
+}
