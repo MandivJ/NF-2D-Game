@@ -1,6 +1,7 @@
 # ⚡ NEON FURY — Cyberpunk Arena Fighter
 
-A futuristic 2D browser-based fighting game set on an alien planet. Battle waves of alien creatures with punches, kicks, and energy blasts in a neon-soaked cyberpunk arena.
+A futuristic 2D browser-based fighting game set on an alien planet. Battle waves of alien creatures with punches, kicks, and energy blasts in a neon-soaked cyberpunk arena. 
+https://mandivj.github.io/NF-2D-Game/
 
 ![Genre](https://img.shields.io/badge/Genre-2D%20Fighting-blueviolet)
 ![Platform](https://img.shields.io/badge/Platform-Browser-00f0ff)
